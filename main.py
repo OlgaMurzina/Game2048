@@ -1,4 +1,4 @@
-# v1_cells branch
+# v2_classic branch
 import pygame
 
 FPS = 60
