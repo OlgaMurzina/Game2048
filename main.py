@@ -1,7 +1,9 @@
 # v2_classic branch
+import random
+
 import pygame
 
-FPS = 60
+FPS = 1
 
 
 class Board:
@@ -17,6 +19,8 @@ class Board:
         self.screen = scr
         # игровая таблица числовых значений каждой клетки
         self.board = [[0] * width for _ in range(height)]
+        # список пустых клеток
+        self.empty_cells = list(range(16))
         # позиция верхнего левого угла картинки по умолчанию
         self.left = 10
         self.top = 10
@@ -33,11 +37,11 @@ class Board:
         # счет игры - за каждый ход прибавляет значение в изменившейся клетке
         self.score = 0
         # рабочие значения поля игры
-        self.board[2][2] = 2
+        """self.board[2][2] = 2
         self.board[2][3] = 2048
         self.board[0][1] = 1024
         self.board[3][2] = 8
-        self.board[3][0] = 4
+        self.board[3][0] = 4"""
 
     def render(self, screen):
         """
@@ -111,14 +115,6 @@ class Board:
         self.top = top
         self.cell_size = cell_size
 
-    def board_new(self, k):
-        """
-        :param k: код смещения (-1 - нажата кнопка влево, 1 - нажата кнопка вправо,
-                                -2 - нажата кнопка вниз, 2 - нажата кнопка вверх)
-        :return: обновление состояния доски после получения слотом сигнала
-        """
-        pass
-
     def event_mouse(self):
         """if event.pos[0] not in range(board.left, board.left + board.width * board.cell_size) or \
                                 event.pos[1] not in range(board.top, board.top + board.height * board.cell_size):
@@ -159,6 +155,32 @@ class Board:
         self.board_new(-2)
 
     def new_values(self):
+        """
+        :return: новый элемент на пустом пространстве доски
+        """
+        n = random.choice(self.empty_cells)
+        self.empty_cells.remove(n)
+        x1 = n // 4
+        y1 = n % 4
+        val = random.choice([2, 4])
+        self.board[x1][y1] = val
+
+    def new_gen(self, i):
+        """
+        генерирует новые значения на доске при каждом ходе
+        :param i: очередность вызова: 2 - первый раз - генерирует 2 значения, 1 - все остальные вызовы и генерация 1 значения
+        :return: возвращает доску с учетом новых значений
+        """
+        for j in range(i):
+            self.new_values()
+
+    def board_new(self, k):
+        """
+        создает новую ситуацию на доске после поступления сигнала от игрока в слот
+        :param k: код смещения (-1 - нажата кнопка влево, 1 - нажата кнопка вправо,
+                                -2 - нажата кнопка вниз, 2 - нажата кнопка вверх)
+        :return: обновление состояния доски после получения слотом сигнала
+        """
         pass
 
 
@@ -170,6 +192,8 @@ def main():
 
     board = Board(4, 4, screen)
     board.set_view(10, 10, (size[0] - 20) // 4)
+    # генерирует два новых числа 2 или 4 на произвольных пустых местах в таблице
+    board.new_gen(2)
     clock = pygame.time.Clock()
     running = True
     while running:
@@ -178,7 +202,7 @@ def main():
 
         # цикл обработки событий
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or not board.empty_cells:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 board.event_mouse()
@@ -191,11 +215,12 @@ def main():
                     board.event_k_up()
                 elif event.key == pygame.K_DOWN:
                     board.event_k_down()
+                # генерирует новое число 2 или 4 на пустом месте
+                board.new_gen(1)
 
         # изменение объектов
         screen.fill((205, 193, 180))
-        # новое случайное [2, 4] значение на пустом месте поля
-        board.new_values()
+
         board.render(screen)
         pygame.display.flip()
 
