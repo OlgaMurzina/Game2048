@@ -33,9 +33,9 @@ class Board:
         # счет игры - за каждый ход прибавляет значение в изменившейся клетке
         self.score = 0
         # рабочие значения поля игры
-        self.board[2][2] = 1024
-        self.board[2][3] = 2
-        self.board[0][1] = 256
+        self.board[2][2] = 2
+        self.board[2][3] = 2048
+        self.board[0][1] = 1024
         self.board[3][2] = 8
         self.board[3][0] = 4
 
@@ -58,6 +58,10 @@ class Board:
                     self.cell_size), 20)
                 # прорисовка цифр в непустых клетках
                 self.view_num(x, y, color_cell)
+                if self.board[x][y] == 2048:
+                    pygame.draw.rect(screen, pygame.Color('white'), (
+                        x * self.cell_size + self.left + 10, y * self.cell_size + self.top + 10, self.cell_size - 22,
+                        self.cell_size - 22), 2)
 
     def view_num(self, xx, yy, col_cell):
         """
