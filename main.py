@@ -3,6 +3,7 @@ import random
 
 import pygame
 
+# частота смены кадров в 1 секунду
 FPS = 1
 
 
@@ -37,11 +38,11 @@ class Board:
         # счет игры - за каждый ход прибавляет значение в изменившейся клетке
         self.score = 0
         # рабочие значения поля игры
-        """self.board[2][2] = 2
+        self.board[2][2] = 2
         self.board[2][3] = 2048
         self.board[0][1] = 1024
         self.board[3][2] = 8
-        self.board[3][0] = 4"""
+        self.board[3][0] = 4
 
     def render(self, screen):
         """
@@ -115,33 +116,6 @@ class Board:
         self.top = top
         self.cell_size = cell_size
 
-    def event_mouse(self):
-        """if event.pos[0] not in range(board.left, board.left + board.width * board.cell_size) or \
-                                event.pos[1] not in range(board.top, board.top + board.height * board.cell_size):
-                            pass
-                        else:
-                            row, col = (event.pos[1] - board.top) // board.cell_size, (
-                                        event.pos[0] - board.left) // board.cell_size
-                            if board.board[col][row] == 0:
-                                board.board[col][row] = 1
-                            elif board.board[col][row] == 1:
-                                board.board[col][row] = 0
-                            for y in range(board.height):
-                                if y == row:
-                                    for x in range(board.width):
-                                        if board.board[x][y] == 0:
-                                            board.board[x][y] = 1
-                                        elif board.board[x][y] == 1:
-                                            board.board[x][y] = 0
-                            for x in range(board.width):
-                                if x == col:
-                                    for y in range(board.height):
-                                        if board.board[x][y] == 0:
-                                            board.board[x][y] = 1
-                                        elif board.board[x][y] == 1:
-                                            board.board[x][y] = 0"""
-        pass
-
     def event_k_left(self):
         self.board_new(-1)
 
@@ -168,7 +142,7 @@ class Board:
     def new_gen(self, i):
         """
         генерирует новые значения на доске при каждом ходе
-        :param i: очередность вызова: 2 - первый раз - генерирует 2 значения, 1 - все остальные вызовы и генерация 1 значения
+        :param i: очередность вызова: 2 - первый раз - генерирует 2 значения из [2,4], 1 - все остальные вызовы и генерация одного значения из [2,4]
         :return: возвращает доску с учетом новых значений
         """
         for j in range(i):
@@ -186,26 +160,26 @@ class Board:
 
 def main():
     pygame.init()
+    # создаем холст
     size = 620, 620
     screen = pygame.display.set_mode(size)
+    # подписываем холст
     pygame.display.set_caption('2048')
-
+    # создаем объект класса Доска размером 4 на 4 клетки на холсте screen и применяем настройки (совпадают с настройками по умолчанию)
     board = Board(4, 4, screen)
     board.set_view(10, 10, (size[0] - 20) // 4)
     # генерирует два новых числа 2 или 4 на произвольных пустых местах в таблице
     board.new_gen(2)
+    # главный игровой цикл
     clock = pygame.time.Clock()
     running = True
     while running:
         # задержка
         clock.tick(FPS)
-
         # цикл обработки событий
         for event in pygame.event.get():
             if event.type == pygame.QUIT or not board.empty_cells:
                 running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                board.event_mouse()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     board.event_k_left()
@@ -215,15 +189,12 @@ def main():
                     board.event_k_up()
                 elif event.key == pygame.K_DOWN:
                     board.event_k_down()
-                # генерирует новое число 2 или 4 на пустом месте
+                # новое случайное [2, 4] значение на пустом месте поля
                 board.new_gen(1)
-
-        # изменение объектов
+        # прорисовка изменений объекта
         screen.fill((205, 193, 180))
-
         board.render(screen)
         pygame.display.flip()
-
     pygame.quit()
 
 
