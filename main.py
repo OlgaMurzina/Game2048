@@ -23,61 +23,95 @@ class Board:
         self.border = (187,173,160)
         # счет игры - за каждый ход прибавляет значение в изменившейся клетке
         self.score = 0
+        self.board[1][2] = 2
 
     def render(self, screen):
         # значения рабочей таблицы
         color = self.border
         for y in range(self.height):
             for x in range(self.width):
-                color_cell = self.colorit[x][y]
+                color_cell = self.colorit[self.board[x][y]]
                 if self.board[x][y] == 0:
                     pygame.draw.rect(screen, pygame.Color(color), (
                         x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                         self.cell_size), 20)
                 elif self.board[x][y] == 2:
-                    pygame.draw.rect(screen, pygame.Color(color), (
+                    pygame.draw.rect(screen, color_cell, (
                         x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                         self.cell_size))
+                    pygame.draw.rect(screen, pygame.Color(color), (
+                        x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                        self.cell_size), 20)
                 elif self.board[x][y] == 4:
-                    pygame.draw.rect(screen, pygame.Color(color), (
+                    pygame.draw.rect(screen, color_cell, (
                         x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                         self.cell_size))
+                    pygame.draw.rect(screen, pygame.Color(color), (
+                        x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                        self.cell_size), 20)
                 elif self.board[x][y] == 8:
-                    pygame.draw.rect(screen, pygame.Color(color), (
+                    pygame.draw.rect(screen, color_cell, (
                         x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                         self.cell_size))
+                    pygame.draw.rect(screen, pygame.Color(color), (
+                        x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                        self.cell_size), 20)
                 elif self.board[x][y] == 16:
-                    pygame.draw.rect(screen, pygame.Color(color), (
+                    pygame.draw.rect(screen, color_cell, (
                         x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                         self.cell_size))
+                    pygame.draw.rect(screen, pygame.Color(color), (
+                        x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                        self.cell_size), 20)
                 elif self.board[x][y] == 32:
-                    pygame.draw.rect(screen, pygame.Color(color), (
+                    pygame.draw.rect(screen, color_cell, (
                         x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                         self.cell_size))
+                    pygame.draw.rect(screen, pygame.Color(color), (
+                        x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                        self.cell_size), 20)
                 elif self.board[x][y] == 64:
-                    pygame.draw.rect(screen, pygame.Color(color), (
+                    pygame.draw.rect(screen, color_cell, (
                         x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                         self.cell_size))
+                    pygame.draw.rect(screen, pygame.Color(color), (
+                        x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                        self.cell_size), 20)
                 elif self.board[x][y] == 128:
-                    pygame.draw.rect(screen, pygame.Color(color), (
+                    pygame.draw.rect(screen, color_cell, (
                         x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                         self.cell_size))
+                    pygame.draw.rect(screen, pygame.Color(color), (
+                        x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                        self.cell_size), 20)
                 elif self.board[x][y] == 256:
-                    pygame.draw.rect(screen, pygame.Color(color), (
+                    pygame.draw.rect(screen, color_cell, (
                         x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                         self.cell_size))
+                    pygame.draw.rect(screen, pygame.Color(color), (
+                        x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                        self.cell_size), 20)
                 elif self.board[x][y] == 512:
-                    pygame.draw.rect(screen, pygame.Color(color), (
+                    pygame.draw.rect(screen, color_cell, (
                         x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                         self.cell_size))
+                    pygame.draw.rect(screen, pygame.Color(color), (
+                        x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                        self.cell_size), 20)
                 elif self.board[x][y] == 1024:
-                    pygame.draw.rect(screen, pygame.Color(color), (
+                    pygame.draw.rect(screen, color_cell, (
                         x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                         self.cell_size))
+                    pygame.draw.rect(screen, pygame.Color(color), (
+                        x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                        self.cell_size), 20)
                 elif self.board[x][y] == 2048:
-                    pygame.draw.rect(screen, pygame.Color(color), (
+                    pygame.draw.rect(screen, color_cell, (
                         x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
                         self.cell_size))
+                    pygame.draw.rect(screen, pygame.Color(color), (
+                        x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size,
+                        self.cell_size), 20)
 
     def set_view(self, left, top, cell_size):
         self.left = left
