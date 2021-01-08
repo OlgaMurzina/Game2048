@@ -10,11 +10,12 @@ class Board:
         конструктор объекта Доска
         :param width: ширина доски в кол-ве клеток
         :param height: высота доски в кол-ве клеток
+        :param scr: холст из основной программы
         """
         self.width = width
         self.height = height
         self.screen = scr
-        # таблица числовых значений каждой клетки
+        # игровая таблица числовых значений каждой клетки
         self.board = [[0] * width for _ in range(height)]
         # позиция верхнего левого угла картинки по умолчанию
         self.left = 10
@@ -24,15 +25,17 @@ class Board:
         # цвет фона клетки - ключ int, цвет цифры в клетке - ключ char
         self.colorit = {0: (205, 193, 180), 2: (238, 228, 218), 4: (238, 225, 201), 8: (243, 178, 122),
                         16: (246, 150, 100), 32: (247, 124, 95), 64: (247, 98, 60), 128: (237, 208, 115),
-                        256: (237, 204, 98), 512: (237, 201, 80), 1024: (238, 198, 66), '8': (249, 246, 242),
+                        256: (237, 204, 98), 512: (237, 201, 80), 1024: (238, 198, 66), 2048: (237, 194, 46),
+                        '8': (249, 246, 242),
                         '4': (119, 110, 101)}
         # цвет границы
         self.border = (187, 173, 160)
         # счет игры - за каждый ход прибавляет значение в изменившейся клетке
         self.score = 0
-        self.board[1][2] = 1024
+        # рабочие значения поля игры
+        self.board[2][2] = 1024
         self.board[2][3] = 2
-        self.board[0][0] = 256
+        self.board[0][1] = 256
         self.board[3][2] = 8
         self.board[3][0] = 4
 
@@ -79,8 +82,9 @@ class Board:
         elif 100 < self.board[xx][yy] < 1000:
             dx = 15
         else:
-            dx = 11
-            dim = 80
+            dx = 14
+            dy = 50
+            dim = 75
         # экран для вывода цифры
         im = pygame.Surface((50, 50))
         im.set_colorkey(col_cell)
@@ -103,8 +107,12 @@ class Board:
         self.top = top
         self.cell_size = cell_size
 
-    def board_new(self):
-        """ обновление состояния доски после получения слотом сигнала"""
+    def board_new(self, k):
+        """
+        :param k: код смещения (-1 - нажата кнопка влево, 1 - нажата кнопка вправо,
+                                -2 - нажата кнопка вниз, 2 - нажата кнопка вверх)
+        :return: обновление состояния доски после получения слотом сигнала
+        """
         pass
 
     def event_mouse(self):
@@ -135,16 +143,16 @@ class Board:
         pass
 
     def event_k_left(self):
-        pass
+        self.board_new(-1)
 
     def event_k_right(self):
-        pass
+        self.board_new(1)
 
     def event_k_up(self):
-        pass
+        self.board_new(2)
 
     def event_k_down(self):
-        pass
+        self.board_new(-2)
 
     def new_values(self):
         pass
