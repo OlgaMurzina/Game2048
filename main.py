@@ -157,37 +157,65 @@ class Board:
         :return: обновление состояния доски после получения слотом сигнала
         """
         if k == -1:
-            # смещение матрицы влево
-            # проверка наличия свободных клеток в первом столбце
+            # смещение матрицы влево c проверкой наличия свободных клеток в предыдущих столбцах
             for j in range(3):
                 for x in range(1, 4):
+                    # создание списков свободных ячеек для каждого предыдущего столбца в динамике
                     left = []
                     for i in range(3):
                         left.append(list(filter(lambda x: x % 4 == i, self.empty_cells)))
-                    print(left)
+                    # если есть хоть одно свободное место слева, будет движение влево до упора
                     if left:
                         for y in range(4):
                             if self.board[x][y] > 0:
+                                # текущее значение не ноль - можно двигать
                                 if (y * 4 + x - 1) in left[x - 1]:
+                                    # впереди есть свободная ячейка
                                     self.board[x - 1][y] = self.board[x][y]
                                     self.empty_cells.remove(y * 4 + x - 1)
                                     self.empty_cells.append(y * 4 + x)
                                     self.board[x][y] = 0
                                 else:
+                                    # впереди нет свободной ячейки, но может быть ячейка с таким же значением, можно слиться
                                     if self.board[x][y] == self.board[x - 1][y]:
                                         self.board[x - 1][y] = 2 * self.board[x][y]
                                         self.empty_cells.append(y * 4 + x)
                                         self.score += 2 * self.board[x][y]
                                         self.board[x][y] = 0
-                                        print(self.score)
+            print(self.score)
         elif k == 1:
-            # смещение матрицы вправо
-            pass
+            # смещение матрицы вправо с проверкой наличия свободных мест в последующих столбцах
+            for j in range(3):
+                for x in range(3):
+                    # создание списков свободных ячеек для каждого предыдущего столбца в динамике
+                    right = []
+                    for i in range(1, 4):
+                        right.append(list(filter(lambda x: x % 4 == i, self.empty_cells)))
+                    # если есть хоть одно свободное место справа, будет движение вправо до упора
+                    print(right)
+                    if right:
+                        for y in range(4):
+                            if self.board[x][y] > 0:
+                                # текущее значение не ноль - можно двигать
+                                if (y * 4 + x + 1) in right[x]:
+                                    # впереди есть свободная ячейка
+                                    self.board[x + 1][y] = self.board[x][y]
+                                    self.empty_cells.remove(y * 4 + x + 1)
+                                    self.empty_cells.append(y * 4 + x)
+                                    self.board[x][y] = 0
+                                else:
+                                    # впереди нет свободной ячейки, но может быть ячейка с таким же значением, можно слиться
+                                    if self.board[x][y] == self.board[x + 1][y]:
+                                        self.board[x + 1][y] = 2 * self.board[x][y]
+                                        self.empty_cells.append(y * 4 + x)
+                                        self.score += 2 * self.board[x][y]
+                                        self.board[x][y] = 0
+            print(self.score)
         elif k == -2:
-            # смещение матрицы вниз
+            # смещение матрицы вниз с проверкой наличия свободных мест в нижележащих строках
             pass
         else:
-            # смещение матицы вверх
+            # смещение матицы вверх с проверкой наличия свободных мест в вышележащих строках
             pass
 
 
