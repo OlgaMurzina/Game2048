@@ -213,10 +213,60 @@ class Board:
             print(self.score)
         elif k == -2:
             # смещение матрицы вниз с проверкой наличия свободных мест в нижележащих строках
-            pass
+            for j in range(3):
+                for y in range(3):
+                    # создание списков свободных ячеек для каждой последующей строки в динамике
+                    down = []
+                    for i in range(4):
+                        down.append(list(filter(lambda x: x % 4 == i, self.empty_cells)))
+                    # если есть хоть одно свободное место справа, будет движение вправо до упора
+                    print(down)
+                    if down:
+                        for x in range(4):
+                            if self.board[x][y] > 0:
+                                # текущее значение не ноль - можно двигать
+                                if ((y + 1) * 4 + x) in down[x]:
+                                    # впереди есть свободная ячейка
+                                    self.board[x][y + 1] = self.board[x][y]
+                                    self.empty_cells.remove((y + 1) * 4 + x)
+                                    self.empty_cells.append(y * 4 + x)
+                                    self.board[x][y] = 0
+                                else:
+                                    # впереди нет свободной ячейки, но может быть ячейка с таким же значением, можно слиться
+                                    if self.board[x][y] == self.board[x][y + 1]:
+                                        self.board[x][y + 1] = 2 * self.board[x][y]
+                                        self.empty_cells.append(y * 4 + x)
+                                        self.score += 2 * self.board[x][y]
+                                        self.board[x][y] = 0
+            print(self.score)
         else:
             # смещение матицы вверх с проверкой наличия свободных мест в вышележащих строках
-            pass
+            for j in range(3):
+                for y in range(1, 4):
+                    # создание списков свободных ячеек для каждой предыдущей строки в динамике
+                    top = []
+                    for i in range(4):
+                        top.append(list(filter(lambda x: x % 4 == i, self.empty_cells)))
+                    # если есть хоть одно свободное место справа, будет движение вправо до упора
+                    print(top)
+                    if top:
+                        for x in range(4):
+                            if self.board[x][y] > 0:
+                                # текущее значение не ноль - можно двигать
+                                if ((y - 1) * 4 + x) in top[x]:
+                                    # впереди есть свободная ячейка
+                                    self.board[x][y - 1] = self.board[x][y]
+                                    self.empty_cells.remove((y - 1) * 4 + x)
+                                    self.empty_cells.append(y * 4 + x)
+                                    self.board[x][y] = 0
+                                else:
+                                    # впереди нет свободной ячейки, но может быть ячейка с таким же значением, можно слиться
+                                    if self.board[x][y] == self.board[x][y - 1]:
+                                        self.board[x][y - 1] = 2 * self.board[x][y]
+                                        self.empty_cells.append(y * 4 + x)
+                                        self.score += 2 * self.board[x][y]
+                                        self.board[x][y] = 0
+            print(self.score)
 
 
 def main():
