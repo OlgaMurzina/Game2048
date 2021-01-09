@@ -4,7 +4,7 @@ import random
 import pygame
 
 # частота смены кадров в 1 секунду
-FPS = 1
+FPS = 50
 
 
 class Board:
