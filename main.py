@@ -38,11 +38,11 @@ class Board:
         # счет игры - за каждый ход прибавляет значение в изменившейся клетке
         self.score = 0
         # рабочие значения поля игры
-        self.board[2][2] = 2
+        """self.board[2][2] = 2
         self.board[2][3] = 2048
         self.board[0][1] = 1024
         self.board[3][2] = 8
-        self.board[3][0] = 4
+        self.board[3][0] = 4"""
 
     def render(self, screen):
         """
@@ -134,10 +134,11 @@ class Board:
         """
         n = random.choice(self.empty_cells)
         self.empty_cells.remove(n)
-        x1 = n // 4
-        y1 = n % 4
+        y1 = n // 4
+        x1 = n % 4
         val = random.choice([2, 4])
         self.board[x1][y1] = val
+        print(self.empty_cells)
 
     def new_gen(self, i):
         """
@@ -155,7 +156,39 @@ class Board:
                                 -2 - нажата кнопка вниз, 2 - нажата кнопка вверх)
         :return: обновление состояния доски после получения слотом сигнала
         """
-        pass
+        if k == -1:
+            # смещение матрицы влево
+            # проверка наличия свободных клеток в первом столбце
+            for j in range(3):
+                for x in range(1, 4):
+                    left = []
+                    for i in range(3):
+                        left.append(list(filter(lambda x: x % 4 == i, self.empty_cells)))
+                    print(left)
+                    if left:
+                        for y in range(4):
+                            if self.board[x][y] > 0:
+                                if (y * 4 + x - 1) in left[x - 1]:
+                                    self.board[x - 1][y] = self.board[x][y]
+                                    self.empty_cells.remove(y * 4 + x - 1)
+                                    self.empty_cells.append(y * 4 + x)
+                                    self.board[x][y] = 0
+                                else:
+                                    if self.board[x][y] == self.board[x - 1][y]:
+                                        self.board[x - 1][y] = 2 * self.board[x][y]
+                                        self.empty_cells.append(y * 4 + x)
+                                        self.score += 2 * self.board[x][y]
+                                        self.board[x][y] = 0
+                                        print(self.score)
+        elif k == 1:
+            # смещение матрицы вправо
+            pass
+        elif k == -2:
+            # смещение матрицы вниз
+            pass
+        else:
+            # смещение матицы вверх
+            pass
 
 
 def main():
