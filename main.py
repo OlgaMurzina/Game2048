@@ -271,6 +271,12 @@ class Board:
             print(self.score)
 
 def load_image(name, color_key=None):
+    """
+    Загрузка рисунка из файла
+    :param name: имя файла
+    :param color_key: цвет фона
+    :return: файл с рисунком
+    """
     fullname = os.path.join('data', name)
     try:
         image = pygame.image.load(fullname).convert()
@@ -287,6 +293,10 @@ def load_image(name, color_key=None):
     return image
 
 def start_screen():
+    """
+    Заставка игры
+    :return: запускает игру по нажатию на любую кнопку (мышь, клавиатура)
+    """
     pygame.init()
     # создаем холст
     size = 620, 620
@@ -322,18 +332,27 @@ def start_screen():
         pygame.display.flip()
         clock.tick(FPS)
 
-def finish_screen(f):
+def finish_screen(f, score):
+    """
+    Экран завершения игры
+    :param f: параметр выхода 0 - переполнение поля (нет ходов), 1 - нажатие кнопки "Закрыть окно", 2 - получение 2048
+    :param score: набранные по ходу игры очки
+    :return: счет игры и инструкцию для завершения/продолжения игры
+    """
     pygame.init()
     # создаем холст
     size = 620, 620
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     message1 = "GAME OVER"
-    if f:
-        message2 = "Для выхода нажмите Х"
+    if f == 0:
+        message2 = f'Результат - {score}'
         message3 = "Начать новую игру - стрелка"
+    elif f == 1:
+        message2 = f'Результат - {score}'
+        message3 = "Счастливого пути!"
     else:
-        message2 = ''
+        message2 = f'ПОБЕДА! Результат - {score}'
         message3 = "Счастливого пути!"
     intro_text = ["Игра закончена",
                   message1, "", message2, message3]
@@ -360,9 +379,13 @@ def finish_screen(f):
                     event.type == pygame.MOUSEBUTTONDOWN:
                 main()
         pygame.display.flip()
-        clock.tick(FPS)
+        clock.tick(FPS + 100)
 
 def main():
+    """
+    главный игровой экран
+    :return: игровую ситуацию, пока она развивается
+    """
     pygame.init()
     # создаем холст
     size = 620, 620
@@ -384,10 +407,13 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-                finish_screen(False)
+                finish_screen(0, board.score)
             elif not board.empty_cells:
                 running = False
-                finish_screen(True)
+                finish_screen(1, board.score)
+            elif 2048 in board.board:
+                running = False
+                finish_screen(2, board.score)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     board.event_k_left()
