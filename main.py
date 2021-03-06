@@ -1,6 +1,7 @@
 # v2_classic branch
 import random
 import sys
+import os
 
 import pygame
 
@@ -269,11 +270,21 @@ class Board:
                                         self.board[x][y] = 0
             print(self.score)
 
+def load_image(name, color_key=None):
+    fullname = os.path.join('data', name)
+    try:
+        image = pygame.image.load(fullname).convert()
+    except pygame.error as message:
+        print('Cannot load image:', name)
+        raise SystemExit(message)
 
-def terminate():
-    pygame.quit()
-    sys.exit()
-
+    if color_key is not None:
+        if color_key == -1:
+            color_key = image.get_at((0, 0))
+        image.set_colorkey(color_key)
+    else:
+        image = image.convert_alpha()
+    return image
 
 def start_screen():
     pygame.init()
@@ -281,34 +292,75 @@ def start_screen():
     size = 620, 620
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
-    intro_text = ["ЗАСТАВКА", "",
-                  "Правила игры",
-                  "Если в правилах несколько строк,",
-                  "приходится выводить их построчно"]
+    intro_text = ["Правила игры",
+                  "Собирать сумму из чисел 2",
+                  "нажатием на клавиши-стрелки",
+                  "",
+                  "Цель - набрать 2048"]
 
     fon = pygame.transform.scale(load_image('2048.jpg'), (620, 620))
     screen.blit(fon, (0, 0))
-    font = pygame.font.Font(None, 30)
-    text_coord = 50
+    font = pygame.font.Font(None, 35)
+    text_coord = 200
     for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color('white'))
+        string_rendered = font.render(line, 1, pygame.Color((119, 110, 101)))
         intro_rect = string_rendered.get_rect()
         text_coord += 10
         intro_rect.top = text_coord
-        intro_rect.x = 10
+        intro_rect.x = 85
         text_coord += intro_rect.height
         screen.blit(string_rendered, intro_rect)
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                terminate()
+                pygame.quit()
+                sys.exit()
             elif event.type == pygame.KEYDOWN or \
                     event.type == pygame.MOUSEBUTTONDOWN:
                 main()
         pygame.display.flip()
         clock.tick(FPS)
 
+def finish_screen(f):
+    pygame.init()
+    # создаем холст
+    size = 620, 620
+    screen = pygame.display.set_mode(size)
+    clock = pygame.time.Clock()
+    message1 = "GAME OVER"
+    if f:
+        message2 = "Для выхода нажмите Х"
+        message3 = "Начать новую игру - стрелка"
+    else:
+        message2 = ''
+        message3 = "Счастливого пути!"
+    intro_text = ["Игра закончена",
+                  message1, "", message2, message3]
+
+    fon = pygame.transform.scale(load_image('2048.jpg'), (620, 620))
+    screen.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 30)
+    text_coord = 200
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color((119, 110, 101)))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 100
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN or \
+                    event.type == pygame.MOUSEBUTTONDOWN:
+                main()
+        pygame.display.flip()
+        clock.tick(FPS)
 
 def main():
     pygame.init()
@@ -330,8 +382,12 @@ def main():
         clock.tick(FPS)
         # цикл обработки событий
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or not board.empty_cells:
+            if event.type == pygame.QUIT:
                 running = False
+                finish_screen(False)
+            elif not board.empty_cells:
+                running = False
+                finish_screen(True)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     board.event_k_left()
@@ -350,5 +406,6 @@ def main():
     pygame.quit()
 
 
+start_screen()
 if __name__ == '__main__':
     main()
