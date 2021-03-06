@@ -303,7 +303,7 @@ def start_screen():
     font = pygame.font.Font(None, 35)
     text_coord = 200
     for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color((119, 110, 101)))
+        string_rendered = font.render(line, 1, pygame.Color((247, 124, 95)))
         intro_rect = string_rendered.get_rect()
         text_coord += 10
         intro_rect.top = text_coord
@@ -343,7 +343,7 @@ def finish_screen(f):
     font = pygame.font.Font(None, 30)
     text_coord = 200
     for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color((119, 110, 101)))
+        string_rendered = font.render(line, 1, pygame.Color((247, 124, 95)))
         intro_rect = string_rendered.get_rect()
         text_coord += 10
         intro_rect.top = text_coord
