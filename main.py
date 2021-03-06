@@ -274,13 +274,19 @@ def terminate():
     pygame.quit()
     sys.exit()
 
+
 def start_screen():
+    pygame.init()
+    # создаем холст
+    size = 620, 620
+    screen = pygame.display.set_mode(size)
+    clock = pygame.time.Clock()
     intro_text = ["ЗАСТАВКА", "",
                   "Правила игры",
                   "Если в правилах несколько строк,",
                   "приходится выводить их построчно"]
 
-    fon = pygame.transform.scale(load_image('fon.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('2048.jpg'), (620, 620))
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 30)
     text_coord = 50
@@ -299,9 +305,10 @@ def start_screen():
                 terminate()
             elif event.type == pygame.KEYDOWN or \
                     event.type == pygame.MOUSEBUTTONDOWN:
-                return  # начинаем игру
+                main()
         pygame.display.flip()
         clock.tick(FPS)
+
 
 def main():
     pygame.init()
