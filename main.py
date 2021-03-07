@@ -72,6 +72,7 @@ class Board:
 
     def view_num(self, xx, yy, col_cell):
         """
+        вывод цифр на экран игры
         :param xx: координата х клетки
         :param yy: координата у клетки
         :param col_cell: цвет фона клетки
@@ -109,6 +110,7 @@ class Board:
 
     def set_view(self, left, top, cell_size):
         """
+        режим настроек по умолчанию или изменение по желанию пользователя
         :param left: левая позиция игрового поля окна
         :param top: верхняя позиция игрового поля окна
         :param cell_size: размер клетки игрового поля окна
@@ -132,6 +134,7 @@ class Board:
 
     def new_values(self):
         """
+        генерация нового значения из диапазона [2; 4] на случайном пустом поле при нажатии стрелки
         :return: новый элемент на пустом пространстве доски
         """
         n = random.choice(self.empty_cells)
@@ -272,7 +275,7 @@ class Board:
 
 def load_image(name, color_key=None):
     """
-    Загрузка рисунка из файла
+    загрузка рисунка фона заставки из файла
     :param name: имя файла
     :param color_key: цвет фона
     :return: файл с рисунком
@@ -294,7 +297,7 @@ def load_image(name, color_key=None):
 
 def start_screen():
     """
-    Заставка игры
+    заставка игры с правилами
     :return: запускает игру по нажатию на любую кнопку (мышь, клавиатура)
     """
     pygame.init()
@@ -303,7 +306,7 @@ def start_screen():
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     intro_text = ["Правила игры",
-                  "Собирать сумму из чисел 2",
+                  "Собирать суммы из чисел 2 и 4",
                   "нажатием на клавиши-стрелки",
                   "",
                   "Цель - набрать 2048"]
@@ -353,7 +356,10 @@ def finish_screen(f, score):
         message3 = "Счастливого пути!"
     else:
         message2 = f'ПОБЕДА! Результат - {score}'
-        message3 = "Счастливого пути!"
+        minn = int(open('Data/res.txt').read())
+        if score < minn:
+            file = open('Data/res.txt', 'w').write(str(minn))
+        message3 = f'Лучший результат - {minn}'
     intro_text = ["Игра закончена",
                   message1, "", message2, message3]
 
