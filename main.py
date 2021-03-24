@@ -8,7 +8,6 @@ import pygame
 # частота смены кадров в 10 секунду
 FPS = 10
 
-
 class Board:
     def __init__(self, width, height, scr):
         """
@@ -39,6 +38,7 @@ class Board:
         self.border = (187, 173, 160)
         # счет игры - за каждый ход прибавляет значение в изменившейся клетке
         self.score = 0
+        self.running = True
         # рабочие значения поля игры
         """self.board[2][2] = 2
         self.board[2][3] = 2048
@@ -69,6 +69,8 @@ class Board:
                     pygame.draw.rect(screen, pygame.Color('white'), (
                         x * self.cell_size + self.left + 10, y * self.cell_size + self.top + 10, self.cell_size - 22,
                         self.cell_size - 22), 2)
+                    self.running = False
+                    finish_screen(2, self.score)
 
     def view_num(self, xx, yy, col_cell):
         """
@@ -143,7 +145,7 @@ class Board:
         x1 = n % 4
         val = random.choice([2, 4])
         self.board[x1][y1] = val
-        print(self.empty_cells)
+        # print(self.empty_cells)
 
     def new_gen(self, i):
         """
@@ -187,7 +189,7 @@ class Board:
                                         self.empty_cells.append(y * 4 + x)
                                         self.score += 2 * self.board[x][y]
                                         self.board[x][y] = 0
-            print(self.score)
+            # print(self.score)
         elif k == 1:
             # смещение матрицы вправо с проверкой наличия свободных мест в последующих столбцах
             for j in range(3):
@@ -197,7 +199,7 @@ class Board:
                     for i in range(1, 4):
                         right.append(list(filter(lambda x: x % 4 == i, self.empty_cells)))
                     # если есть хоть одно свободное место справа, будет движение вправо до упора
-                    print(right)
+                    # print(right)
                     if right:
                         for y in range(4):
                             if self.board[x][y] > 0:
@@ -215,7 +217,7 @@ class Board:
                                         self.empty_cells.append(y * 4 + x)
                                         self.score += 2 * self.board[x][y]
                                         self.board[x][y] = 0
-            print(self.score)
+            # print(self.score)
         elif k == -2:
             # смещение матрицы вниз с проверкой наличия свободных мест в нижележащих строках
             for j in range(3):
@@ -225,7 +227,7 @@ class Board:
                     for i in range(4):
                         down.append(list(filter(lambda x: x % 4 == i, self.empty_cells)))
                     # если есть хоть одно свободное место справа, будет движение вправо до упора
-                    print(down)
+                    # print(down)
                     if down:
                         for x in range(4):
                             if self.board[x][y] > 0:
@@ -243,7 +245,7 @@ class Board:
                                         self.empty_cells.append(y * 4 + x)
                                         self.score += 2 * self.board[x][y]
                                         self.board[x][y] = 0
-            print(self.score)
+            # print(self.score)
         else:
             # смещение матицы вверх с проверкой наличия свободных мест в вышележащих строках
             for j in range(3):
@@ -253,7 +255,7 @@ class Board:
                     for i in range(4):
                         top.append(list(filter(lambda x: x % 4 == i, self.empty_cells)))
                     # если есть хоть одно свободное место справа, будет движение вправо до упора
-                    print(top)
+                    # print(top)
                     if top:
                         for x in range(4):
                             if self.board[x][y] > 0:
@@ -271,7 +273,7 @@ class Board:
                                         self.empty_cells.append(y * 4 + x)
                                         self.score += 2 * self.board[x][y]
                                         self.board[x][y] = 0
-            print(self.score)
+            # print(self.score)
 
 def load_image(name, color_key=None):
     """
@@ -309,14 +311,15 @@ def start_screen():
                   "Собирать суммы из чисел 2 и 4",
                   "нажатием на клавиши-стрелки",
                   "",
-                  "Цель - набрать 2048"]
+                  "Цель - набрать 2048",
+                  "за минимальное число ходов"]
 
     fon = pygame.transform.scale(load_image('2048.jpg'), (620, 620))
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 35)
     text_coord = 200
     for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color((247, 124, 95)))
+        string_rendered = font.render(line, 1, pygame.Color((255, 120, 80)))
         intro_rect = string_rendered.get_rect()
         text_coord += 10
         intro_rect.top = text_coord
@@ -342,7 +345,7 @@ def finish_screen(f, score):
     :param score: набранные по ходу игры очки
     :return: счет игры и инструкцию для завершения/продолжения игры
     """
-    pygame.init()
+
     # создаем холст
     size = 620, 620
     screen = pygame.display.set_mode(size)
@@ -350,25 +353,27 @@ def finish_screen(f, score):
     message1 = "GAME OVER"
     if f == 0:
         message2 = f'Результат - {score}'
-        message3 = "Начать новую игру - стрелка"
+        message3 = "Начать новую игру - нажать кнопку мышки"
     elif f == 1:
         message2 = f'Результат - {score}'
-        message3 = "Счастливого пути!"
+        message3 = "Начать новую игру - нажать кнопку мышки"
     else:
         message2 = f'ПОБЕДА! Результат - {score}'
         minn = int(open('Data/res.txt').read())
         if score < minn:
-            file = open('Data/res.txt', 'w').write(str(minn))
+            file = open('Data/res.txt', 'w').write(str(score))
+            minn = score
         message3 = f'Лучший результат - {minn}'
+    message4 = "Для выхода из игры - закрыть окно"
     intro_text = ["Игра закончена",
-                  message1, "", message2, message3]
+                  message1, "", message2, message3, message4]
 
     fon = pygame.transform.scale(load_image('2048.jpg'), (620, 620))
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 30)
     text_coord = 200
     for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color((247, 124, 95)))
+        string_rendered = font.render(line, 1, pygame.Color((255, 120, 80)))
         intro_rect = string_rendered.get_rect()
         text_coord += 10
         intro_rect.top = text_coord
@@ -381,11 +386,10 @@ def finish_screen(f, score):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.KEYDOWN or \
-                    event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 main()
         pygame.display.flip()
-        clock.tick(FPS + 100)
+        clock.tick(FPS)
 
 def main():
     """
@@ -405,21 +409,18 @@ def main():
     board.new_gen(2)
     # главный игровой цикл
     clock = pygame.time.Clock()
-    running = True
-    while running:
+    board.running = True
+    while board.running:
         # задержка
         clock.tick(FPS)
         # цикл обработки событий
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                board.running = False
                 finish_screen(0, board.score)
             elif not board.empty_cells:
-                running = False
+                board.running = False
                 finish_screen(1, board.score)
-            elif 2048 in board.board:
-                running = False
-                finish_screen(2, board.score)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     board.event_k_left()
