@@ -1,12 +1,13 @@
 # v2_classic branch
+import os
 import random
 import sys
-import os
 
 import pygame
 
 # частота смены кадров в 10 секунду
 FPS = 10
+
 
 class Board:
     def __init__(self, width, height, scr):
@@ -275,6 +276,7 @@ class Board:
                                         self.board[x][y] = 0
             # print(self.score)
 
+
 def load_image(name, color_key=None):
     """
     загрузка рисунка фона заставки из файла
@@ -288,7 +290,6 @@ def load_image(name, color_key=None):
     except pygame.error as message:
         print('Cannot load image:', name)
         raise SystemExit(message)
-
     if color_key is not None:
         if color_key == -1:
             color_key = image.get_at((0, 0))
@@ -296,6 +297,7 @@ def load_image(name, color_key=None):
     else:
         image = image.convert_alpha()
     return image
+
 
 def start_screen():
     """
@@ -313,7 +315,6 @@ def start_screen():
                   "",
                   "Цель - набрать 2048",
                   "за минимальное число ходов"]
-
     fon = pygame.transform.scale(load_image('2048.jpg'), (620, 620))
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 35)
@@ -326,7 +327,7 @@ def start_screen():
         intro_rect.x = 85
         text_coord += intro_rect.height
         screen.blit(string_rendered, intro_rect)
-
+    # автономный игровой цикл для поддержки стартового экрана
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -338,6 +339,7 @@ def start_screen():
         pygame.display.flip()
         clock.tick(FPS)
 
+
 def finish_screen(f, score):
     """
     Экран завершения игры
@@ -345,7 +347,6 @@ def finish_screen(f, score):
     :param score: набранные по ходу игры очки
     :return: счет игры и инструкцию для завершения/продолжения игры
     """
-
     # создаем холст
     size = 620, 620
     screen = pygame.display.set_mode(size)
@@ -367,7 +368,7 @@ def finish_screen(f, score):
     message4 = "Для выхода из игры - закрыть окно"
     intro_text = ["Игра закончена",
                   message1, "", message2, message3, message4]
-
+    # вывод сформированного текста на финишный экран
     fon = pygame.transform.scale(load_image('2048.jpg'), (620, 620))
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 30)
@@ -380,7 +381,7 @@ def finish_screen(f, score):
         intro_rect.x = 100
         text_coord += intro_rect.height
         screen.blit(string_rendered, intro_rect)
-
+    # автономный игровой цикл для поддержки финишного экрана
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -390,6 +391,7 @@ def finish_screen(f, score):
                 main()
         pygame.display.flip()
         clock.tick(FPS)
+
 
 def main():
     """
